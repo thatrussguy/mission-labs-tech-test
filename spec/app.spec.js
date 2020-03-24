@@ -8,7 +8,11 @@ const connection = require("../db/connection");
 const request = supertest(app);
 
 describe("/", () => {
-  beforeEach(() => connection.seed.run());
+  beforeEach(() =>
+    connection.migrate.latest().then(function() {
+      return connection.seed.run();
+    })
+  );
   after(() => connection.destroy());
 
   describe("/products", () => {
