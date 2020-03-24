@@ -36,8 +36,12 @@ exports.patchProductById = (req, res, next) => {
   updateProductById(product_id, req.body)
     .then(() => selectProductById(product_id))
     .then(product => {
-      product.sizes = JSON.parse(product.sizes);
-      res.send(product);
+      if (!product)
+        res.status(404).send({ msg: `No such product: ${product_id}` });
+      else {
+        product.sizes = JSON.parse(product.sizes);
+        res.send(product);
+      }
     })
     .catch(next);
 };
