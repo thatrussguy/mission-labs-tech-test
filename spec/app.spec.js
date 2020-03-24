@@ -7,6 +7,11 @@ const app = require("../app");
 const connection = require("../db/connection");
 const request = supertest(app);
 
+const { AUTH_KEY } = process.env;
+const authHeaders = { "X-Token": AUTH_KEY };
+
+console.log(authHeaders);
+
 describe("/", () => {
   beforeEach(() =>
     connection.migrate.latest().then(function() {
@@ -54,6 +59,7 @@ describe("/", () => {
       it("201 - inserts a product with properties from request body and returns the new product", () => {
         return request
           .post("/products")
+          .set(authHeaders)
           .send({
             name: "Test",
             price: 123,
@@ -79,6 +85,7 @@ describe("/", () => {
       it("400 - if missing any properties from req.body", () => {
         return request
           .post("/products")
+          .set(authHeaders)
           .expect(400)
           .then(({ body }) => {
             expect(body.msg).to.equal(
@@ -118,6 +125,7 @@ describe("/", () => {
         it("200 - updates the product with the provided properties", () => {
           return request
             .patch("/products/1")
+            .set(authHeaders)
             .send({
               sizes: ["M"],
               name: "New Name"
@@ -131,6 +139,7 @@ describe("/", () => {
         it("400 - returns the unchanged product if body is blank", () => {
           return request
             .patch("/products/1")
+            .set(authHeaders)
             .expect(400)
             .then(({ body }) => {
               expect(body.msg).to.equal(
@@ -141,6 +150,7 @@ describe("/", () => {
         it("400 - if property to update is invalid", () => {
           return request
             .patch("/products/1")
+            .set(authHeaders)
             .send({ size: ["M"] })
             .expect(400)
             .then(({ body }) => {
@@ -154,6 +164,7 @@ describe("/", () => {
         it("204 - deletes the product and returns nothing", () => {
           return request
             .delete("/products/1")
+            .set(authHeaders)
             .expect(204)
             .then(({ body }) => {
               expect(body).to.deep.equal({});
@@ -162,6 +173,7 @@ describe("/", () => {
         it("404 - if product_id is not in database", () => {
           return request
             .delete("/products/1000")
+            .set(authHeaders)
             .expect(404)
             .then(({ body }) => {
               expect(body.msg).to.equal("No such product: 1000");
