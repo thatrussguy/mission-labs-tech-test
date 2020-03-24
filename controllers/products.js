@@ -26,7 +26,7 @@ exports.getProductById = (req, res, next) => {
         res.status(404).send({ msg: `No such product: ${product_id}` });
       else {
         product.sizes = JSON.parse(product.sizes);
-        res.send(product);
+        res.send({ product });
       }
     })
     .catch(next);
