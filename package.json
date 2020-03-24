@@ -3,7 +3,11 @@
   "version": "1.0.0",
   "main": "listen.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "nodemon listen.js",
+    "migrate-latest": "knex migrate:latest",
+    "seed": "knex seed:run",
+    "start": "node listen.js",
+    "test": "mocha ./spec/*.spec.js"
   },
   "repository": {
     "type": "git",
@@ -18,6 +22,7 @@
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.17.1",
+    "faker": "^4.1.0",
     "knex": "^0.20.13",
     "sqlite3": "^4.1.1"
   },
