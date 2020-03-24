@@ -5,3 +5,7 @@ exports.routeNotFound = (_, res) => {
 exports.methodNotAllowed = (_, res) => {
   res.status(405).send({ msg: "Method Not Allowed" });
 };
+
+exports.handle500 = (err, _, res, _next) => {
+  res.status(500).send({ msg: "Internal Server Error" });
+};
