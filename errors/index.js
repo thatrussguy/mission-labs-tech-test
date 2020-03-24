@@ -24,14 +24,21 @@ exports.handleSqliteErrors = (err, _, res, next) => {
     "SQLITE_ERROR: no such column": {
       status: 400,
       msg: error
+    },
+    "SQLITE_ERROR: no such table": {
+      status: 500,
+      msg: "Unable to access database table"
     }
   };
   if (error.includes("SQLITE_ERROR: no such column")) {
     error = "SQLITE_ERROR: no such column";
   }
+  if (error.includes("SQLITE_ERROR: no such table")) {
+    error = "SQLITE_ERROR: no such table";
+  }
   if (errorReference[error]) {
-    res.status(errorReference[error].status || 500).send({
-      msg: errorReference[error].msg || `Unknown sqlite error - ${error}`
+    res.status(errorReference[error].status).send({
+      msg: errorReference[error].msg
     });
   } else next(err);
 };
