@@ -1,5 +1,7 @@
 const faker = require("faker");
 
+faker.seed(123);
+
 const createFakeProduct = () => ({
   name: faker.commerce.productName(),
   price: faker.commerce.price(),
@@ -17,7 +19,7 @@ exports.seed = function(knex) {
 
   // Deletes ALL existing entries
   return knex("products")
-    .del()
+    .truncate()
     .then(function() {
       // Inserts seed entries
       return knex("products").insert(fakeProducts);
