@@ -18,9 +18,10 @@ const updateProductById = (product_id, body) => {
     .where({ product_id })
     .update({ ...body });
 };
-const insertProduct = ({ category, name, price, sizes }) => {
+const insertProduct = body => {
+  body.sizes = JSON.stringify(body.sizes);
   return connection("products")
-    .insert({ category, name, price, sizes: JSON.stringify(sizes) })
+    .insert({ ...body })
     .then(([product_id]) => selectProductById(product_id));
 };
 const removeProductById = product_id => {
