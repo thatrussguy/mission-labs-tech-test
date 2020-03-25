@@ -1,5 +1,7 @@
 const connection = require("../db/connection");
 
+const { NODE_ENV } = process.env;
+
 const selectProducts = ({ priceFrom, priceTo }) => {
   return connection("products").modify(query => {
     if (priceFrom) query.where("products.price", ">=", priceFrom);
@@ -20,9 +22,13 @@ const updateProductById = (product_id, body) => {
 };
 const insertProduct = body => {
   body.sizes = JSON.stringify(body.sizes);
-  return connection("products")
-    .insert({ ...body })
-    .then(([product_id]) => selectProductById(product_id));
+  return NODE_ENV === "production"
+    ? connection("products")
+        .insert({ ...body })
+        .then(([{ product_id }]) => selectProductById(product_id))
+    : connection("products")
+        .insert({ ...body })
+        .then(([product_id]) => selectProductById(product_id));
 };
 const removeProductById = product_id => {
   return connection("products")
