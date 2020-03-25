@@ -25,6 +25,7 @@ const insertProduct = body => {
   return NODE_ENV === "production"
     ? connection("products")
         .insert({ ...body })
+        .returning("*")
         .then(([{ product_id }]) => selectProductById(product_id))
     : connection("products")
         .insert({ ...body })
