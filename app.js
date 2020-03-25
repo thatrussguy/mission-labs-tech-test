@@ -5,7 +5,7 @@ require("dotenv").config();
 
 const authoriser = require("./middleware/authoriser");
 const productsRouter = require("./routes/products");
-const { handle500, handleSqliteErrors, routeNotFound } = require("./errors");
+const { handle500, handleDbErrors, routeNotFound } = require("./errors");
 
 const app = express();
 
@@ -16,7 +16,7 @@ app.use(authoriser);
 app.use("/products", productsRouter);
 app.all("/*", routeNotFound);
 
-app.use(handleSqliteErrors);
+app.use(handleDbErrors);
 app.use(handle500);
 
 module.exports = app;

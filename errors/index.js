@@ -10,7 +10,7 @@ exports.handle500 = (err, _, res, _next) => {
   res.status(500).send({ msg: "Internal Server Error" });
 };
 
-exports.handleSqliteErrors = (err, _, res, next) => {
+exports.handleDbErrors = (err, _, res, next) => {
   let [error] = err.stack.split(". ");
   const errorReference = {
     "TypeError: `sqlite` does not support inserting default values": {
