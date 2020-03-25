@@ -7,6 +7,7 @@ exports.methodNotAllowed = (_, res) => {
 };
 
 exports.handle500 = (err, _, res, _next) => {
+  console.log(err);
   res.status(500).send({ msg: "Internal Server Error" });
 };
 
