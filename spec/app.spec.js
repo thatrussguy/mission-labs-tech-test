@@ -10,8 +10,6 @@ const request = supertest(app);
 const { AUTH_KEY } = process.env;
 const authHeaders = { "X-Token": AUTH_KEY };
 
-console.log(authHeaders);
-
 describe("/", () => {
   beforeEach(() =>
     connection.migrate.latest().then(function() {
