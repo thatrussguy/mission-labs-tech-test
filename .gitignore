@@ -105,3 +105,6 @@ dist
 
 # Database files
 *.sqlite3
+
+# VSCode settings
+.vscode
