@@ -7,7 +7,7 @@ const authoriser = require("./middleware/authoriser");
 const productsRouter = require("./routes/products");
 const { handle500, handleDbErrors, routeNotFound } = require("./errors");
 
-const app = express();
+export const app = express();
 
 app.use(express.json());
 app.use(cors());
@@ -18,5 +18,3 @@ app.all("/*", routeNotFound);
 
 app.use(handleDbErrors);
 app.use(handle500);
-
-module.exports = app;

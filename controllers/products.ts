@@ -1,27 +1,30 @@
+import { NextFunction, Request, Response } from "express";
+import { Product } from "../types/product";
+
 const {
   selectProducts,
   selectProductById,
   updateProductById,
   insertProduct,
-  removeProductById
+  removeProductById,
 } = require("../models/products");
 
-exports.getProducts = (req, res, next) => {
+exports.getProducts = (req: Request, res: Response, next: NextFunction) => {
   selectProducts(req.query)
-    .then(products => {
+    .then((products: Product[]) => {
       res.send({
         products: products.map(({ sizes, ...rest }) => ({
           sizes: JSON.parse(sizes),
-          ...rest
-        }))
+          ...rest,
+        })),
       });
     })
     .catch(next);
 };
-exports.getProductById = (req, res, next) => {
+exports.getProductById = (req: Request, res: Response, next: NextFunction) => {
   const { product_id } = req.params;
   selectProductById(product_id)
-    .then(product => {
+    .then((product: Product) => {
       if (!product)
         res.status(404).send({ msg: `No such product: ${product_id}` });
       else {
@@ -31,11 +34,15 @@ exports.getProductById = (req, res, next) => {
     })
     .catch(next);
 };
-exports.patchProductById = (req, res, next) => {
+exports.patchProductById = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const { product_id } = req.params;
   updateProductById(product_id, req.body)
     .then(() => selectProductById(product_id))
-    .then(product => {
+    .then((product: Product) => {
       if (!product)
         res.status(404).send({ msg: `No such product: ${product_id}` });
       else {
@@ -45,18 +52,22 @@ exports.patchProductById = (req, res, next) => {
     })
     .catch(next);
 };
-exports.postProduct = (req, res, next) => {
+exports.postProduct = (req: Request, res: Response, next: NextFunction) => {
   insertProduct(req.body)
-    .then(product => {
+    .then((product: Product) => {
       product.sizes = JSON.parse(product.sizes);
       res.status(201).send(product);
     })
     .catch(next);
 };
-exports.deleteProductById = (req, res, next) => {
+exports.deleteProductById = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const { product_id } = req.params;
   removeProductById(product_id)
-    .then(rowsAffected => {
+    .then((rowsAffected: number) => {
       if (rowsAffected === 1) res.sendStatus(204);
       else res.status(404).send({ msg: `No such product: ${product_id}` });
     })

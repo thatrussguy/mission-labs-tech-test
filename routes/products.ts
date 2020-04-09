@@ -5,7 +5,7 @@ const {
   getProductById,
   patchProductById,
   postProduct,
-  deleteProductById
+  deleteProductById,
 } = require("../controllers/products");
 
 productsRouter

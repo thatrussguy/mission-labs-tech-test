@@ -1,9 +1,13 @@
+import { Product } from "../types/product";
+import { ApiResponse } from "../types/apiResponse";
+import { app } from "../app";
+
 process.env.NODE_ENV = "test";
 
 const { expect } = require("chai");
 const supertest = require("supertest");
 
-const app = require("../app");
+// const app = require("../app");
 const connection = require("../db/connection");
 const request = supertest(app);
 
@@ -12,7 +16,7 @@ const authHeaders = { "X-Token": AUTH_KEY };
 
 describe("/", () => {
   beforeEach(() =>
-    connection.migrate.latest().then(function() {
+    connection.migrate.latest().then(function () {
       return connection.seed.run();
     })
   );
@@ -24,7 +28,7 @@ describe("/", () => {
         return request
           .get("/products")
           .expect(200)
-          .then(({ body }) => {
+          .then(({ body }: ApiResponse) => {
             expect(body).to.contain.keys("products");
             expect(body.products).to.be.an("array");
             expect(body.products[0]).to.contain.keys(
@@ -40,7 +44,7 @@ describe("/", () => {
         return request
           .get("/products?priceFrom=100")
           .expect(200)
-          .then(({ body }) => {
+          .then(({ body }: ApiResponse) => {
             expect(body.products.length).to.equal(85);
           });
       });
@@ -48,7 +52,7 @@ describe("/", () => {
         return request
           .get("/products?priceTo=100")
           .expect(200)
-          .then(({ body }) => {
+          .then(({ body }: ApiResponse) => {
             expect(body.products.length).to.equal(8);
           });
       });
@@ -62,10 +66,10 @@ describe("/", () => {
             name: "Test",
             price: 123,
             category: "Something",
-            sizes: ["XS", "XL"]
+            sizes: ["XS", "XL"],
           })
           .expect(201)
-          .then(({ body }) => {
+          .then(({ body }: ApiResponse) => {
             expect(body).to.contain.keys(
               "category",
               "name",
@@ -85,7 +89,7 @@ describe("/", () => {
           .post("/products")
           .set(authHeaders)
           .expect(400)
-          .then(({ body }) => {
+          .then(({ body }: ApiResponse) => {
             expect(body.msg).to.equal(
               "TypeError: `sqlite` does not support inserting default values"
             );
@@ -98,7 +102,7 @@ describe("/", () => {
           return request
             .get("/products/1")
             .expect(200)
-            .then(({ body }) => {
+            .then(({ body }: ApiResponse) => {
               expect(body).to.contain.keys("product");
               expect(body.product).to.be.an("object");
               expect(body.product).to.contain.keys(
@@ -114,7 +118,7 @@ describe("/", () => {
           return request
             .get("/products/1000")
             .expect(404)
-            .then(({ body }) => {
+            .then(({ body }: ApiResponse) => {
               expect(body.msg).to.equal("No such product: 1000");
             });
         });
@@ -126,10 +130,10 @@ describe("/", () => {
             .set(authHeaders)
             .send({
               sizes: ["M"],
-              name: "New Name"
+              name: "New Name",
             })
             .expect(200)
-            .then(({ body }) => {
+            .then(({ body }: ApiResponse) => {
               expect(body.sizes).to.eql(["M"]);
               expect(body.name).to.equal("New Name");
             });
@@ -139,7 +143,7 @@ describe("/", () => {
             .patch("/products/1")
             .set(authHeaders)
             .expect(400)
-            .then(({ body }) => {
+            .then(({ body }: ApiResponse) => {
               expect(body.msg).to.equal(
                 "Error: Empty .update() call detected! Update data does not contain any values to update"
               );
@@ -151,7 +155,7 @@ describe("/", () => {
             .set(authHeaders)
             .send({ size: ["M"] })
             .expect(400)
-            .then(({ body }) => {
+            .then(({ body }: ApiResponse) => {
               expect(body.msg).to.equal(
                 "Error: update `products` set `size` = 'M' where `product_id` = '1' - SQLITE_ERROR: no such column: size"
               );
@@ -164,7 +168,7 @@ describe("/", () => {
             .delete("/products/1")
             .set(authHeaders)
             .expect(204)
-            .then(({ body }) => {
+            .then(({ body }: ApiResponse) => {
               expect(body).to.deep.equal({});
             });
         });
@@ -173,7 +177,7 @@ describe("/", () => {
             .delete("/products/1000")
             .set(authHeaders)
             .expect(404)
-            .then(({ body }) => {
+            .then(({ body }: ApiResponse) => {
               expect(body.msg).to.equal("No such product: 1000");
             });
         });

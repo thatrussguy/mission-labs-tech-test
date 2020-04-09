@@ -1,6 +1,8 @@
+import { NextFunction, Response, Request } from "express";
+
 const { AUTH_KEY } = process.env;
 
-const authoriser = (req, res, next) => {
+const authoriser = (req: Request, res: Response, next: NextFunction) => {
   const { method, headers } = req;
   const token = headers["x-token"];
   if (["DELETE", "PATCH", "POST"].includes(method))
