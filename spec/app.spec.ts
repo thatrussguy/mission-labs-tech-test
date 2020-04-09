@@ -1,4 +1,3 @@
-import { Product } from "../types/product";
 import { ApiResponse } from "../types/apiResponse";
 import { app } from "../app";
 
