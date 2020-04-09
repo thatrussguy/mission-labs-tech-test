@@ -3,12 +3,14 @@
   "version": "1.0.0",
   "main": "listen.js",
   "scripts": {
-    "dev": "nodemon listen.js",
+    "build": "tsc",
+    "dev": "ts-node listen.ts",
     "migrate-latest": "knex migrate:latest",
     "migrate-latest:test": "NODE_ENV=test knex migrate:latest",
+    "prod": "npm run build && npm run start",
     "seed": "knex seed:run",
-    "start": "node listen.js",
-    "test": "mocha ./spec/*.spec.js"
+    "start": "node ./dist/listen.js",
+    "test": "mocha -r ts-node/register ./spec/*.spec.ts"
   },
   "repository": {
     "type": "git",
