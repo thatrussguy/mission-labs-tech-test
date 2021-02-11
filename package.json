@@ -34,7 +34,7 @@
     "knex": "^0.21.17",
     "sqlite3": "5.0.1",
     "ts-node": "^9.1.1",
-    "typescript": "^4.1.4"
+    "typescript": "^4.1.5"
   },
   "devDependencies": {
     "chai": "^4.3.0",
